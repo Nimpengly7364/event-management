@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Registration::class);
     }
+
+    public function organizer()
+    {
+        return $this->hasOne(Organizer::class);
+    }
 }

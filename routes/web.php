@@ -3,8 +3,11 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrganizerController;
 
 // define web routes for the application.
+Route::resource('organizers', OrganizerController::class);
 Route::resource('events', EventController::class);
 Route::resource('users', UserController::class);
 
@@ -24,13 +27,23 @@ Route::middleware('auth')->group(function () {
 });
 
 // Show registration form
-Route::get('events/{id}/register', [EventController::class, 'showRegistrationForm'])->name('events.registerForm');
+Route::get('events/{id}/register', [EventController::class, 'showRegistrationForm'])
+    ->name('events.registerForm');
 
 // Handle registration submission
-Route::post('events/{id}/register', [EventController::class, 'registerUser'])->name('events.register');
+Route::post('events/{id}/register', [EventController::class, 'registerUser'])
+    ->name('events.register');
 
 // Show list of registered users
-Route::get('events/{id}/registrations', [EventController::class, 'showRegistrations'])->name('events.showRegistrations');
+Route::get('events/{id}/registrations', [EventController::class, 'showRegistrations'])
+    ->name('events.showRegistrations');
+
+
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
 
 // Include authentication routes
 require __DIR__ . '/auth.php';

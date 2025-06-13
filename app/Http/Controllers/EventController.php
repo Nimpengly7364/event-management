@@ -122,7 +122,7 @@ class EventController extends Controller
         }
 
         return redirect()->route('events.showRegistrations', $event->id)
-                         ->with('success', 'You have successfully registered for the event!');
+            ->with('success', 'You have successfully registered for the event!');
     }
 
     // Show list of registered users for an event
@@ -131,4 +131,5 @@ class EventController extends Controller
         $event = Event::with('registrations.user')->findOrFail($id);
         return view('events.registrations', compact('event'));
     }
+
 }
