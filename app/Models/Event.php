@@ -15,12 +15,13 @@ class Event extends Model
         'location',
         'date',
         'capacity',
-        'organizer_id',
+        'user_id',
     ];
 
-    public function organizer()
+
+    public function user()
     {
-        return $this->belongsTo(User::class, 'organizer_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function registrations()

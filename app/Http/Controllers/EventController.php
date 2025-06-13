@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\User;
 use App\Models\Registration;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -29,7 +30,7 @@ class EventController extends Controller
     // Store a newly created resource in storage.
     public function store(Request $request)
     {
-        // Validate and store the new event
+        // Validate request data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -37,11 +38,19 @@ class EventController extends Controller
             'date' => 'required|date',
             'capacity' => 'required|integer|min:1',
         ]);
+        // Add the logged-in user's ID
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'You must be logged in to create an event.');
+        }
+        $validated['user_id'] = $user->id; // Make sure the user is logged in
 
+        // Create event
         Event::create($validated);
 
         return redirect()->route('events.index')->with('success', 'Event created successfully!');
     }
+
 
     // Display the specified resource.
     public function show(string $id)
@@ -131,5 +140,4 @@ class EventController extends Controller
         $event = Event::with('registrations.user')->findOrFail($id);
         return view('events.registrations', compact('event'));
     }
-
 }
